@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+
+<!--
+  Google HTML5 slide template
+
+  Authors: Luke Mahé (code)
+           Marcin Wichary (code and design)
+           
+           Dominic Mazzoni (browser compatibility)
+           Charles Chen (ChromeVox support)
+
+  URL: http://code.google.com/p/html5slides/
+-->
+
+<html>
+  <head>
+    <title>Design Pattern no JavaScript | Ciro Nunes</title>
+
+    <meta charset='utf-8'>
+    <script src='http://html5slides.googlecode.com/svn/trunk/slides.js'></script>
+		<style type="text/css">
+			.slides.template-io2011 > article:not(.nobackground):not(.biglogo){background-image:none !important;}
+			.darkbg{color:#f0f0f0 !important;}
+			thead th{background:#f0f0f0;}
+		</style>
+  </head>
+  
+  <style>
+    /* Your individual styles here, or just use inline styles if that’s
+       what you want. */
+    
+    
+  </style>
+
+  <body style='display: none'>
+
+    <section class='slides layout-regular template-io2011'>
+      
+      <!-- Your slides (<article>s) go here. Delete or comment out the
+           slides below. -->
+
+      <article>
+        <h1>
+          Design Patterns
+          <br>
+          no JavaScript
+        </h1>
+        <p>
+          Ciro Nunes
+          <br>
+          11 Fev, 2012
+					<br>
+        </p>
+        <div class='source'>
+          #riojs
+        </div>
+      </article>
+
+      <article>
+        <h3>
+          Quem sou eu?
+        </h3>
+        <ul>
+					<li>
+						JavaScriptr
+					</li>
+          <li>
+            Front-end dev &#8776; 1 ano
+          </li>  
+					<li>
+            <a href="http://github.com/cironunes/html-patterns">HTML Patterns</a>
+          </li>
+          <li>
+            <a href="mailto:ciroaunes@gmail.com">ciroaunes@gmail.com</a>
+          </li>
+          <li>
+            <a href="http://twitter.com/cironunesdev">@cironunesdev</a>
+          </li>
+        </ul>
+        <div class='source'>
+          #riojs
+        </div>
+      </article>
+
+      <article class="fill">
+				<img src="images/hiperativa.png" height="500" alt="" />
+        <div class='source'>
+          #riojs
+        </div>
+      </article>
+
+			<article>
+				<h1>Design Patterns</h1>
+        <div class='source'>
+          #riojs
+        </div>
+			</article>
+
+			<article>
+				<h3 class="smaller">Agenda</h3>
+				<ul>
+					<li>
+						JavaScript OO<br>
+						<ul>
+							<li>Encapsulamento</li>
+							<li>Herança (classica x prototipal)</li>
+						</ul>
+					</li>
+					<li>
+						Design Patterns<br>
+						<ul>
+							<li>Mixins</li>
+							<li>Module</li>
+							<li>Facade</li>
+						</ul>
+					</li>
+				</ul>
+				<div class='source'>
+          #riojs
+        </div>
+			</article>
+			
+      <article class="smaller">
+        <h2>
+          Orientação a objetos é um poder especial do JavaScript destravado apenas para prós.
+        </h2>
+        <div class='source'>
+          #rio.js
+        </div>
+      </article>
+			
+      <article>
+				<h1>Encapsulamento</h1>
+        <div class="source">#rio.js</div>
+      </article>
+
+      <article>
+				<h3>Encapsulamento</h3>
+				<ul>
+					<li>Conveção de nomes (getters e setters)</li>
+					<li>Closures</li>
+				</ul>
+        <div class="source">#rio.js</div>
+      </article>
+
+      <article>
+				<h3>Encapsulamento</h3>
+				<pre>
+function foo( a ) {
+  var a = a;
+  function bar() {
+    console.log(a);
+  }
+
+	return bar();
+}
+
+foo(5); //5
+				</pre>
+        <div class="source">#rio.js</div>
+      </article>
+
+			
+			<article>
+				<h1>Herança</h1>
+				<div class='source'>
+          #riojs
+        </div>
+			</article>
+			
+			<article>
+				<h3>Herança clássica</h3>
+        <ul>
+          <li>JavaScript não tem classes</li>
+          <li>Funções construtoras</li>
+          <li>Encapsulamento via module pattern</li>
+        </ul>
+				<div class='source'>
+          #riojs
+        </div>
+			</article>
+			
+			<article class="smaller">
+					<h3>Herança Clássica</h3>
+	        <pre>
+//first class
+var Person = function ( name ) {
+  this.name = name;
+};
+
+Person.prototype.getName = function () {
+  return this.name;
+};
+
+var Programmer = function( name ) {
+  Person.call(this, name);
+}
+
+Programmer.prototype = new Person();
+Programmer.prototype.constructor = Programmer;
+Programmer.prototype.buildApplication = function () {
+  return 'building...';
+};
+
+var p = new Programmer('John');
+p.buildApplication(); //building...
+					</pre>
+				<div class='source'>
+          #riojs
+        </div>
+			</article>
+	
+			<article>
+				<h3>Herança prototipal</h3>
+        <ul>
+          <li>Objetos extendem de objetos</li>
+          <li>Link dos objetos para o prototype dos seus construtores (ECMA5 Object.create())</li>
+        </ul>
+				<div class='source'>
+          #riojs
+        </div>
+			</article>
+			
+			<article class="smaller">
+					<h3>Herança Prototipal</h3>
+	        <pre>
+//http://javascript.crockford.com/prototypal.html
+if (typeof Object.create !== 'function') {
+  Object.create = function (o) {
+    function F() {}
+    F.prototype = o;
+    return new F();
+  };
+}
+
+var Person = {
+  name: 'default',
+  getName: function () {
+    return this.name;
+  }
+},
+
+Programmer = Object.create(Person);
+Programmer.makeHTML = function () {
+  return 'HTML rockz!';
+};
+
+var p = Object.create(Programmer);
+p.name = 'John';
+p.makeHTML(); //HTML rockz!
+					</pre>
+				<div class='source'>
+          #riojs
+        </div>
+			</article>
+			
+			<article class="smaller">
+				<h3>Herança Prototipal (Exemplo)</h3>
+<pre>
+//objeto genérico
+var EditInPlace = {
+	init: function( id, parent, value ) {},
+	createElements: function() {},
+	attachEvents: function () {}
+};
+
+//reutilizando código
+var EditInPlaceField = Object.create(EditField);
+//adaptando métodos
+EditInPlaceField.createElements = function() {};
+
+//reutilizando código
+var EditInPlaceArea = Object.create(EditField);
+//adaptando métodos
+EditArea.createElements = function() {};
+
+//instanciando
+var myTitle = Object.create(EditArea);
+myTitle.init( 'title01', myTitleParent, 'title value' );
+</pre>
+				<div class='source'>
+          #riojs
+        </div>
+			</article>
+
+      <article>
+				<h1>Mixins</h1>
+        <div class="source">#rio.js</div>
+      </article>
+
+      <article class="smaller">
+				<h3>Mixins</h3>
+				<ul>
+					<li>Reutilização de código sem utilizar propriamente herança</li>
+					<li>Classes com métodos de propósito geral para compor outras classes.</li>
+				</ul>
+        <div class="source">#rio.js</div>
+      </article>
+
+      <article class="smaller">
+				<h3>Mixins</h3>
+				<pre>
+var Mixin = function() {};
+Mixin.prototype = {
+  method: function () {},
+  anotherMethod: function() {
+    console.log('wow');
+  }
+};
+
+augment(Programmer, Mixin);
+
+var p = new Programmer('John Resig');
+p.prototype.method = function() {
+  console.log('anything');
+};
+p.anotherMethod();
+				</pre>
+        <div class="source">#rio.js</div>
+      </article>
+
+      <article class="smaller">
+				<h3>Mixins (função augment)</h3>
+				<pre>
+function augment( receivingClass, givingClass ) {
+  for(methodName in givingClass.prototype) {
+    if(!receivingClass.prototype[methodName]) {
+      receivingClass.prototype[methodName] = givingClass.prototype[methodName];
+    }
+  }
+}
+
+//improvements
+function augment(receivingClass, givingClass) {
+  if(arguments[2]) { // Only give certain methods.
+    for(var i = 2, len = arguments.length; i < len; i++) {
+      receivingClass.prototype[arguments[i]] = givingClass.prototype[arguments[i]];
+    }
+  }
+  else { // Give all methods.
+    for(methodName in givingClass.prototype) {
+      if(!receivingClass.prototype[methodName]) {
+        receivingClass.prototype[methodName] = givingClass.prototype[methodName];
+      }
+    }
+  } 
+}
+				</pre>
+        <div class="source">#rio.js</div>
+      </article>
+
+      <article>
+ 			<h1>Module</h1>
+        <div class="source">#rio.js</div>
+      </article>
+
+     <article class="smaller">
+			<h3>Module</h3>
+
+      <ul>
+        <li>ajuda a emular classes</li>
+        <li>privacidade</li>
+        <li>public API</li>
+      </ul>
+
+			<pre>
+var MODULE = (function () {
+  var privateVar = 100;
+  
+  return {
+    incrementPrivateVar: function () {
+      privateVar++;
+    }
+  }
+}());
+			</pre>
+       <div class="source">#rio.js</div>
+     </article>
+
+     <article>
+			<h1>Facade</h1>
+       <div class="source">#rio.js</div>
+     </article>
+
+     <article class="smaller">
+			<h3>Facade</h3>
+			<ul>
+        <li>
+          Acaba com tarefas repetitivas<br>
+          <ul>
+            <li>abstraem tarefas complexas (funções reutilizáveis)</li>
+            <li>comum em libs</li>
+          </ul>
+        </li>
+			</ul>
+			<pre>
+addEvent(document.body, 'click', function () {
+  console.log('clicked');
+});
+			</pre>
+      <pre>
+function addEvent(el, type, fn) {
+  if (window.addEventListener) {
+    el.addEventListener(type, fn, false);
+  }
+  else if (window.attachEvent) {
+    el.attachEvent('on' + type, fn);
+}
+else {
+    el['on' + type] = fn;
+  }
+}
+      </pre>
+       <div class="source">#rio.js</div>
+     </article>
+			
+      <article>
+        <h3>
+          Obrigado.
+        </h3>
+        <ul>
+					<li>
+            <a href="http://github.com/cironunes/html-patterns">HTML Patterns</a>
+          </li>
+          <li>
+            <a href="mailto:ciroaunes@gmail.com">ciroaunes@gmail.com</a>
+          </li>
+          <li>
+            <a href="http://twitter.com/cironunesdev">@cironunesdev</a>
+          </li>
+        </ul>
+        <div class='source'>
+          #riojs
+        </div>
+      </article>
+
+      <article class="smaller">
+        <h3>
+          Referências
+        </h3>
+        <ul>
+					<li>
+	            <a href="https://github.com/addyosmani/essential-js-design-patterns">Essential JavaScript Design Patterns - Addy Osmani</a>
+	          </li>
+	         <li>
+            <a href="http://addyosmani.com/blog/understanding-mvc-and-mvp-for-javascript-and-backbone-developers/">JavaScript Patterns - Stoyan Stefanov</a>
+          </li>
+          <li>
+            <a href="http://shop.oreilly.com/product/9780596806767.do">Understanding MVC And MVP (For JavaScript And Backbone Developers) - Addy Osmani</a>
+          </li>
+          <li>
+            <a href="http://jsdesignpatterns.com/">Pro JavaScript Design Patterns - Dustin Diaz</a>
+          </li>
+          <li>
+            <a href="http://jsdesignpatterns.com/">Superclassy inheritance with JavaScript - Alex Sexton</a>
+          </li>
+          <li>
+            <a href="http://www.crockford.com/javascript/inheritance.html">Classical Inheritance - Douglas Crockford</a>
+          </li>
+          <li>
+            <a href="http://javascript.crockford.com/prototypal.html">Prototypal Inheritance - Douglas Crockford</a>
+          </li>
+        </ul>
+        <div class='source'>
+          #riojs
+        </div>
+      </article>
+
+    </section>
+
+  </body>
+</html>
