@@ -1,1 +1,0 @@
-#Slides da palestra apresentada no #riojs
